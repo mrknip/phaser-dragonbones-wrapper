@@ -1,0 +1,12 @@
+{
+  "name": "phaser-dragonbones-wrapper",
+  "version": "1.0.0",
+  "description": "Simple wrapper for working with dragonbones in Phaser",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrknip/phaser-dragonbones-wrapper"
+  },
+  "author": "Drew Johnson <drew.johnson.dev@gmail.com> (http://mrknip.com/)"
+}
