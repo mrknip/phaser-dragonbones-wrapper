@@ -5,7 +5,7 @@
  * @param  {string} name
  */
 function loadDragonbonesArmature (game, path, name) {
-  const packName = `${name}`+'dragonbonesData'
+  const packName = `${name}`+'dragonbonesData';
   const pack = {
     [packName]: [
       {
@@ -38,15 +38,14 @@ function loadDragonbonesArmature (game, path, name) {
   });
 }
 
-export default class MHDragonbonesPlugin extends Phaser.Plugin {
+export default class PhaserDragonbonesWrapperPlugin extends Phaser.Plugin {
   constructor (game, parent) {
     super(game, parent);
 
-    this._augmentPhaserLoader();
     this.game.plugins.dragonbones = this;
 
     dragonBones.PhaserFactory.init(this.game);
-    
+
     Phaser.Loader.prototype.dragonbones = (path, name) => {
       loadDragonbonesArmature(this.game, path, name);
     }
