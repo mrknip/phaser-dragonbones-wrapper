@@ -64,7 +64,7 @@ export default class PhaserDragonbonesWrapperPlugin extends Phaser.Plugin {
           armature._armature.getSlot(slotName),
           displayIndex,
         );
-        console.log(armature._armature.getSlot(slotName));
+
         armature._armature.getSlot(slotName).invalidUpdate(); // To force rerender in case changing back to default display
       };
 
