@@ -9,19 +9,19 @@ function loadDragonbonesArmature (game, path, name) {
   const pack = {
     [packName]: [
       {
-        type: "json",
+        type: 'json',
         key: name + '_ske',
-        url: path + name + "_ske.json"
+        url: path + name + '_ske.json'
       },
       {
-        type: "json",
+        type: 'json',
         key: name + '_tex',
-        url: path + name + "_tex.json"
+        url: path + name + '_tex.json'
       },
       {
-        type: "image",
+        type: 'image',
         key: name + '_tex',
-        url: path + name + "_tex.png"
+        url: path + name + '_tex.png'
       }
     ]
   };
@@ -30,13 +30,14 @@ function loadDragonbonesArmature (game, path, name) {
 
   game.load.onLoadComplete.add(() => {
     const dbFactory = dragonBones.PhaserFactory.factory;
-    dbFactory.parseDragonBonesData(game.cache.getJSON(name + "_ske"));
+    dbFactory.parseDragonBonesData(game.cache.getJSON(name + '_ske'));
     dbFactory.parseTextureAtlasData(
-       game.cache.getJSON(name + "_tex"),
-       (game.cache.getImage(name + "_tex", true)).base
+      game.cache.getJSON(name + '_tex'),
+      (game.cache.getImage(name + '_tex', true)).base
     );
   });
 }
+
 
 export default class PhaserDragonbonesWrapperPlugin extends Phaser.Plugin {
   constructor (game, parent) {
@@ -48,19 +49,38 @@ export default class PhaserDragonbonesWrapperPlugin extends Phaser.Plugin {
 
     Phaser.Loader.prototype.dragonbones = (path, name) => {
       loadDragonbonesArmature(this.game, path, name);
-    }
+    };
 
-    Phaser.GameObjectCreator.prototype.dragonbones = (key, armatureName = "Armature") => {
+    Phaser.GameObjectCreator.prototype.dragonbones = (key, armatureName = 'Armature') => {
       const dbFactory = dragonBones.PhaserFactory.factory;
-      return dragonBones.PhaserFactory.factory.buildArmatureDisplay(armatureName, key);
-    }
+      const armature = dbFactory.buildArmatureDisplay(armatureName, key);
 
-    Phaser.GameObjectFactory.prototype.dragonbones = (key, armatureName = "Armature") => {
-      return this.game.world.add(dragonBones.PhaserFactory.factory.buildArmatureDisplay(armatureName, key));
-    }
+      armature.updateSlotDisplay = (slotName, newSlotTextureName, displayIndex) => {
+        dragonBones.PhaserFactory.factory.replaceSlotDisplay(
+          key,
+          armatureName,
+          slotName,
+          newSlotTextureName,
+          armature._armature.getSlot(slotName),
+          displayIndex,
+        );
+
+        armature._armature.getSlot(slotName).invalidUpdate(); // To force rerender in case changing back to default display
+      };
+
+      return armature;
+    };
+
+    Phaser.GameObjectFactory.prototype.dragonbones = (key, armatureName = 'Armature') => {
+      const dbFactory = dragonBones.PhaserFactory.factory;
+      const armature = dbFactory.buildArmatureDisplay(armatureName, key);
+
+      return this.game.world.add(armature);
+    };
   }
 
   update () {
     dragonBones.PhaserFactory.factory.dragonBones.advanceTime(-1.0); // TODO: delta time needed?!
   }
+
 }
