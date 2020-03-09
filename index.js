@@ -55,6 +55,15 @@ export default class PhaserDragonbonesWrapperPlugin extends Phaser.Plugin {
       const dbFactory = dragonBones.PhaserFactory.factory;
       const armature = dbFactory.buildArmatureDisplay(armatureName, key);
 
+      armature.onAnimationComplete = ((handler, context) => {
+        armature.addEvent(dragonBones.EventObject.COMPLETE, () => {
+          handler.call(context);
+        });
+      });
+
+      /**
+       * For changing texture on a given slot
+       */
       armature.updateSlotDisplay = (slotName, newSlotTextureName, displayIndex) => {
         dragonBones.PhaserFactory.factory.replaceSlotDisplay(
           key,
